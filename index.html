@@ -4,66 +4,84 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bolillero Virtual</title>
+
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: white;
-        text-align: center;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    text-align: center;
+}
 
-    .pantalla-principal {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-    }
+/* Pantalla principal */
+.pantalla-principal {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
-    .numero {
-        font-size: 180px;
-        font-weight: bold;
-        color: gold;
-    }
+.numero {
+    font-size: 180px;
+    font-weight: bold;
+    color: gold;
+}
 
-    .texto {
-        font-size: 30px;
-    }
+.texto {
+    font-size: 30px;
+}
 
-    /* Panel oculto */
-    .panel-admin {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(0,0,0,0.9);
-        padding: 20px;
-        border-radius: 10px;
-        display: none;
-    }
+.historial {
+    margin-top: 30px;
+    font-size: 24px;
+}
 
-    input {
-        padding: 10px;
-        font-size: 20px;
-        width: 100px;
-        text-align: center;
-    }
+/* Panel secreto */
+.panel-admin {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.95);
+    padding: 20px;
+    border-radius: 10px;
+    display: none;
+    z-index: 1000;
+}
 
-    button {
-        padding: 10px 20px;
-        font-size: 18px;
-        margin-top: 10px;
-        cursor: pointer;
-    }
+input {
+    padding: 10px;
+    font-size: 20px;
+    width: 120px;
+    text-align: center;
+}
 
-    .historial {
-        margin-top: 30px;
-        font-size: 24px;
-    }
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/* Botón invisible */
+#botonSecreto {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px;
+    height: 80px;
+    background: transparent;
+    z-index: 999;
+}
 </style>
 </head>
 <body>
 
+<!-- Botón secreto invisible -->
+<div id="botonSecreto" onclick="togglePanel()"></div>
+
+<!-- Pantalla visible -->
 <div class="pantalla-principal">
     <div class="texto">Número sorteado</div>
     <div class="numero" id="numeroActual">--</div>
@@ -73,26 +91,35 @@
     </div>
 </div>
 
+<!-- Panel oculto -->
 <div class="panel-admin" id="panelAdmin">
-    <h3>Panel oculto</h3>
-    <input type="number" id="nuevoNumero" min="0" max="99">
+    <h3>Panel secreto</h3>
+    
+    <input 
+        type="number" 
+        id="nuevoNumero" 
+        placeholder="Número"
+        min="0"
+        max="99"
+    >
+    
     <br>
+
     <button onclick="mostrarNumero()">Mostrar</button>
 </div>
 
 <script>
 let historialNumeros = [];
 
-// Mostrar panel con tecla secreta "A"
-document.addEventListener("keydown", function(event) {
-    if (event.key.toLowerCase() === "a") {
-        const panel = document.getElementById("panelAdmin");
-        panel.style.display = 
-            panel.style.display === "none" || panel.style.display === ""
-            ? "block"
-            : "none";
+function togglePanel() {
+    const panel = document.getElementById("panelAdmin");
+
+    if (panel.style.display === "none" || panel.style.display === "") {
+        panel.style.display = "block";
+    } else {
+        panel.style.display = "none";
     }
-});
+}
 
 function mostrarNumero() {
     const input = document.getElementById("nuevoNumero");
@@ -111,9 +138,13 @@ function mostrarNumero() {
         historialNumeros.pop();
     }
 
-    document.getElementById("historial").textContent = historialNumeros.join(" - ");
+    document.getElementById("historial").textContent =
+        historialNumeros.join(" - ");
 
     input.value = "";
+
+    // cerrar panel automáticamente
+    document.getElementById("panelAdmin").style.display = "none";
 }
 </script>
 
