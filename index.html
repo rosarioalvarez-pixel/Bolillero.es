@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolillero Virtual</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #111;
+        color: white;
+        text-align: center;
+    }
+
+    .pantalla-principal {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .numero {
+        font-size: 180px;
+        font-weight: bold;
+        color: gold;
+    }
+
+    .texto {
+        font-size: 30px;
+    }
+
+    /* Panel oculto */
+    .panel-admin {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.9);
+        padding: 20px;
+        border-radius: 10px;
+        display: none;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 20px;
+        width: 100px;
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 18px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+
+    .historial {
+        margin-top: 30px;
+        font-size: 24px;
+    }
+</style>
+</head>
+<body>
+
+<div class="pantalla-principal">
+    <div class="texto">Número sorteado</div>
+    <div class="numero" id="numeroActual">--</div>
+
+    <div class="historial">
+        Últimos números: <span id="historial"></span>
+    </div>
+</div>
+
+<div class="panel-admin" id="panelAdmin">
+    <h3>Panel oculto</h3>
+    <input type="number" id="nuevoNumero" min="0" max="99">
+    <br>
+    <button onclick="mostrarNumero()">Mostrar</button>
+</div>
+
+<script>
+let historialNumeros = [];
+
+// Mostrar panel con tecla secreta "A"
+document.addEventListener("keydown", function(event) {
+    if (event.key.toLowerCase() === "a") {
+        const panel = document.getElementById("panelAdmin");
+        panel.style.display = 
+            panel.style.display === "none" || panel.style.display === ""
+            ? "block"
+            : "none";
+    }
+});
+
+function mostrarNumero() {
+    const input = document.getElementById("nuevoNumero");
+    const numero = input.value;
+
+    if (numero === "") {
+        alert("Ingresá un número");
+        return;
+    }
+
+    document.getElementById("numeroActual").textContent = numero;
+
+    historialNumeros.unshift(numero);
+
+    if (historialNumeros.length > 10) {
+        historialNumeros.pop();
+    }
+
+    document.getElementById("historial").textContent = historialNumeros.join(" - ");
+
+    input.value = "";
+}
+</script>
+
+</body>
+</html>
